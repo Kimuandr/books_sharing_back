@@ -1,31 +1,69 @@
-const db = require('../db/db');
+const User = require('../db/user');
+ 
 
 class UserController {
-    async createUser(req, res) {
-        const {name, surname} = req.body;
-        const newPerson = await db.query('INSERT INTO person (name, surname) values ($1, $2) RETURNING *', [name, surname]);
-        console.log(name, surname);
-        res.json(newPerson.rows[0]);
+async getUsers(req, res) {
+    try {
+        const user = await User.findAll();
+        res.send(user);
+    } catch (err) {
+        console.log(err);
     }
-    async getUsers(req, res) {
-        const users = await db.query('SELECT * FROM person');
-        res.json(users.rows);
+}
+ 
+async getUserById(req, res) {
+    try {
+        const user = await User.findAll({
+            where: {
+                id: req.params.id
+            }
+        });
+        res.send(user[0]);
+    } catch (err) {
+        console.log(err);
     }
-    async getOneUser(req, res) {
-        const id = req.params.id;
-        const user = await db.query('SELECT * FROM person where id = $1', [id]);
-        res.json(user.rows[0]);
+}
+ 
+async createUser(req, res) {
+    try {
+        await User.create(req.body);
+        res.json({
+            "message": "User Created"
+        });
+    } catch (err) {
+        console.log(err);
     }
-    async updateUser(req, res) {
-        const {id, name, surname} = req.body;
-        const user = await db.query('UPDATE person set name = $1, surname = $2 where id = $3 RETURNING *', [name, surname, id]);
-        res.json(user.rows[0]);
+}
+ 
+async updateUser(req, res) {
+    try {
+        await User.update(req.body, {
+            where: {
+                id: req.params.id
+            }
+        });
+        res.json({
+            "message": "User updated"
+        });
+    } catch (err) {
+        console.log(err);
     }
-    async deleteUser(req, res) {
-        const id = req.params.id;
-        const user = await db.query('DELETE FROM person where id = $1', [id]);
-        res.json(user.rows[0]);
+}
+ 
+async deleteUser(req, res) {
+    try {
+        await User.destroy({
+            where: {
+                id: req.params.id
+            }
+        });
+        res.json({
+            "message": "User deleted"
+        });
+    } catch (err) {
+        console.log(err);
     }
+}
 }
 
 module.exports = new UserController();
