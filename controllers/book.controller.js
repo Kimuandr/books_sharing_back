@@ -3,10 +3,8 @@ const Book = require('../db/book');
 class BookController {
     async createBook(req, res) {
         try {
-            await Book.create(req.body);
-            res.json({
-                "message": "book created"
-            });
+            const newBook = await Book.create(req.body);
+            res.json(newBook);
         } catch (err) {
             console.log(err);
         }
@@ -16,14 +14,13 @@ class BookController {
         try {
             const book = await Book.findAll({
                 where: {
-                    id: req.params.UserId
+                    id: req.params.userId
                 }
             });
             res.send(book);
         } catch (err) {
             console.log(err);
         }
-
     }
 }
 

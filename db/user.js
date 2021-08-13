@@ -1,5 +1,7 @@
 const db = require('./db');
-const { DataTypes } = require('sequelize');
+const {
+    DataTypes
+} = require('sequelize');
 
 const User = db.define(
     "User", {
@@ -13,16 +15,18 @@ const User = db.define(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        surname: {
+        email: {
             type: DataTypes.STRING,
             allowNull: false,
         },
         isAdmin: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
+        },
+        password: {
+            type: DataTypes.STRING,
         }
-    },
-    {
+    }, {
         tableName: "users",
         timestamps: false,
     }

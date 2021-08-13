@@ -1,5 +1,5 @@
 const User = require('../db/user');
- 
+const bcrypt = require('bcrypt');
 
 class UserController {
 async getUsers(req, res) {
@@ -26,25 +26,38 @@ async getUserById(req, res) {
  
 async createUser(req, res) {
     try {
-        await User.create(req.body);
-        res.json({
-            "message": "User Created"
-        });
+        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        const createUser = await User.create({name: req.body.name, email: req.body.email, isAdmin: req.body.isAdmin, password: hashedPassword});
+        res.json(createUser);
     } catch (err) {
         console.log(err);
+    }
+}
+
+async loginUser(req, res) {
+    const user = User.find(user => user.email === req.body.email);
+    if (user === null) {
+        return res.status(400).send("Can't find user");
+    }
+    try {
+        if (await bcrypt.compare(req.body.password, user.password)) {
+            res.send('Successfully logged in');
+        } else {
+            res.send('Try again');
+        }
+    } catch {
+        res.status(500).send();
     }
 }
  
 async updateUser(req, res) {
     try {
-        await User.update(req.body, {
+        const updateUser = await User.update(req.body, {
             where: {
                 id: req.params.id
             }
         });
-        res.json({
-            "message": "User updated"
-        });
+        res.json(updateUser);
     } catch (err) {
         console.log(err);
     }
