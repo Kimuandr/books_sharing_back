@@ -1,14 +1,12 @@
-require('dotenv').config();
+const Sequelize = require("sequelize");
+const config = require("../config/config");
 
-
-const Sequelize = require('sequelize');
-
-const db = new Sequelize(process.env.DATABASE, process.env.USER, process.env.PASSWORD, {
-    host: 'localhost',
-    dialect: 'postgres',
-    define: {
-        freeTableName: true,
-    }
+const db = new Sequelize(config.database, config.username, config.password, {
+  host: config.host,
+  dialect: config.dialect,
+  define: {
+    freeTableName: true
+  }
 });
 
 module.exports = db;
