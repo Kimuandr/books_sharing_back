@@ -13,27 +13,30 @@ const app = express();
 app.use(express.json());
 
 User.belongsToMany(Book, {
-  through: "UserBooks",
-  timestamps: false
+	through: "UserBooks",
+	timestamps: false
 });
 Book.belongsToMany(User, {
-  through: "UserBooks",
-  timestamps: false
+	through: "UserBooks",
+	timestamps: false
 });
 
 const tablesCreate = async (force = false) => {
-  try {
-    sequelize.sync({
-      force
-    });
-    sequelize.authenticate();
-    console.log("Connection has been established successfully");
-  } catch (error) {
-    console.error("Unable to connect to the database:", error);
-  }
+	try {
+		sequelize.sync({
+			force
+		});
+		sequelize.authenticate();
+		console.log("Connection has been established successfully");
+	} catch (error) {
+		console.error("Unable to connect to the database:", error);
+	}
 };
 tablesCreate();
 
+app.use(express.urlencoded({
+	extended: true
+})); // instead of 'body-parser'
 app.use("/api", userRouter);
 app.use("/api", bookRouter);
 

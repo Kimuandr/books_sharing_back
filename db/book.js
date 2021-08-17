@@ -1,12 +1,12 @@
 const db = require("./db");
-const {DataTypes} = require("sequelize");
+const { DataTypes } = require("sequelize");
 
 const Book = db.define(
   "Book", {
     id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-        defaultValue: DataTypes.UUIDV4
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
     },
     author: {
       type: DataTypes.STRING,
@@ -21,4 +21,5 @@ const Book = db.define(
     timestamps: false
   }
 );
+
 module.exports = Book;

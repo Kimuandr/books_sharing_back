@@ -2,3 +2,4 @@ node_modules/
 .env
 .eslintrc.json
 .prettierrc
+endpoints_for_admin.js
