@@ -1,9 +1,11 @@
-const UserServices = require("../services/user.services");
+const UserService = require("../services/user.services");
 
 class UserController {
 	async registration(req, res) {
 		try {
-			await UserServices.userRegistration(req, res);
+			const { name, email, password } = req.body;
+			const newPerson = await UserService.createUser(name, email, password);
+			res.json(newPerson);
 		} catch (err) {
 			console.log(err);
 		}
@@ -11,7 +13,9 @@ class UserController {
 
 	async login(req, res) {
 		try {
-			await UserServices.userLogin(req, res);
+			const { email, password } = req.body;
+			const response = await UserService.userLogin(email, password);
+			res.json(response);
 		} catch {
 			res.status(500).send();
 		}
@@ -19,7 +23,7 @@ class UserController {
 
 	async getUsers(req, res) {
 		try {
-			const user = await UserServices.getAllUsers();
+			const user = await UserService.getAllUsers();
 			res.send(user);
 		} catch (err) {
 			console.log(err);

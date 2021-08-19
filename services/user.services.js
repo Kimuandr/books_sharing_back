@@ -2,56 +2,55 @@ const User = require("../db/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
+const newError = require("../errors/serverErrors");
 
-class UserServices {
+class UserService {
 	async getAllUsers() {
-		const user = await User.findAll();
-		return user;
+		const users = await User.findAll();
+		return users;
 	}
 
-	async passwordHashing(pass) {
-		const hashedPassword = await bcrypt.hash(pass, 10);
-		return hashedPassword;
+	async hashedData(data) {
+		const dataHashed = await bcrypt.hash(data, 10);
+		return dataHashed;
 	}
 
-	async userRegistration(req, res) {
-		const { login, email, password } = req.body;
-
+	async createUser(name, email, password) {
 		const userAlreadyExists = await User.findOne({ where: { email } })
 			.catch(err => console.log("Error", err));
 
 		if (userAlreadyExists) {
-			return res.json({ message: "User already exists" });
+			return newError.request("Something went wrong! Try again");
 		}
-		const hashedPassword = await bcrypt.hash(password, 10);
 		const newUser = await User.create({
-			login: login,
+			name: name,
 			email: email,
-			password: hashedPassword
+			password: await this.hashedData(password)
 		});
-		console.log(newUser);
-		if (newUser) {
-			return res.json({ message: "Registered" });
-		}
-		return res.json(newUser);
+		return newUser;
 	}
 
-	async userLogin(req, res) {
-		const { email, password } = req.body;
-		const user = await User.findOne({ where: { email } })
-			.catch(err => console.log("Error", err));
+	async jwtAdding(id, email) {
+		return jwt.sign({ id, email }, config.jwt, { expiresIn: config.jwtExpire });
+	}
+
+	async userLogin(email, password) {
+		if (!email || !password) {
+			return newError.request("Try to enter your data again");
+		}
+
+		const user = await User.findOne({ where: { email } });
+
 		if (!user) {
-			return res.json({ message: "Email or password doesn't match" });
+			return newError.request("Something went wrong");
 		}
+
 		if (await bcrypt.compare(password, user.password)) {
-			const jwtToken = jwt.sign({
-				id: user.id,
-				email: user.email
-			}, config.jwt, { expiresIn: "2h" });
-			return res.json({ message: "Welcome!", token: jwtToken });
+			const token = await this.jwtAdding(user.id, user.email);
+			return { user, token };
 		}
-		return res.send("Try again");
+		return newError.request("Try to enter your data again");
 	}
 }
 
-module.exports = new UserServices();
+module.exports = new UserService();

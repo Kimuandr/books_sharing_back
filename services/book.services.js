@@ -1,15 +1,15 @@
 const Book = require("../db/book");
 
-class BookServices {
-	async createOneBook(req, res) {
-		const newBook = await Book.create(req.body);
-		return res.json(newBook);
+class BookService {
+	async createOneBook(author, title) {
+		const newBook = await Book.create({ author, title });
+		return newBook;
 	}
 
-	async getAllBooks(req, res) {
+	async getAllBooks() {
 		const book = await Book.findAll();
-		return res.send(book);
+		return book;
 	}
 }
 
-module.exports = new BookServices();
+module.exports = new BookService();

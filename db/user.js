@@ -8,7 +8,7 @@ const User = db.define(
 			primaryKey: true,
 			defaultValue: DataTypes.UUIDV4
 		},
-		login: {
+		name: {
 			type: DataTypes.STRING,
 			allowNull: false
 		},
@@ -24,7 +24,7 @@ const User = db.define(
 			type: DataTypes.STRING
 		}
 	}, {
-		tableName: "users",
+		tableName: "user",
 		timestamps: false
 	}
 );

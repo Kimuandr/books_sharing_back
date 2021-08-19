@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 module.exports = {
 	username: process.env.DB_USER,
 	password: process.env.DB_PASSWORD,
@@ -7,5 +5,8 @@ module.exports = {
 	host: process.env.DB_HOST,
 	dialect: "postgres",
 	port: process.env.DB_PORT,
-	jwt: process.env.JWT_SECRET
+	jwt: process.env.JWT_SECRET,
+	jwtExpire: process.env.JWT_EXPIRE,
+	refJwt: process.env.REFJWT_SECRET,
+	refJwtExpire: process.env.REFRJWT_EXPIRE
 };

@@ -32,7 +32,6 @@ const tablesCreate = async (force = false) => {
 		console.error("Unable to connect to the database:", error);
 	}
 };
-tablesCreate();
 
 app.use(express.urlencoded({
 	extended: true

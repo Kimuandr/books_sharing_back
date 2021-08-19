@@ -1,9 +1,11 @@
-const BookServices = require("../services/book.services");
+const BookService = require("../services/book.services");
 
 class BookController {
 	async createBook(req, res) {
 		try {
-			await BookServices.createOneBook(req, res);
+			const { author, title } = req.body;
+			const newBook = await BookService.createOneBook(author, title);
+			res.send(newBook);
 		} catch (err) {
 			console.log(err);
 		}
@@ -11,7 +13,8 @@ class BookController {
 
 	async getBooks(req, res) {
 		try {
-			await BookServices.getAllBooks(req, res);
+			const books = await BookService.getAllBooks();
+			res.send(books);
 		} catch (err) {
 			console.log(err);
 		}
