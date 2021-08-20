@@ -3,11 +3,10 @@ const UserService = require("../services/user.services");
 class UserController {
 	async registration(req, res) {
 		try {
-			const { name, email, password } = req.body;
-			const newPerson = await UserService.createUser(name, email, password);
+			const newPerson = await UserService.createUser({ ...req.body });
 			res.json(newPerson);
 		} catch (err) {
-			console.log(err);
+			res.status(500).send();
 		}
 	}
 
@@ -26,7 +25,7 @@ class UserController {
 			const user = await UserService.getAllUsers();
 			res.send(user);
 		} catch (err) {
-			console.log(err);
+			res.status(500).send();
 		}
 	}
 }
