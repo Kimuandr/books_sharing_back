@@ -1,5 +1,6 @@
 const db = require("./db");
 const { DataTypes } = require("sequelize");
+const Book = require("./book");
 
 const User = db.define(
 	"User", {
@@ -28,5 +29,15 @@ const User = db.define(
 		timestamps: false
 	}
 );
+
+User.belongsToMany(Book, {
+	through: "UserBooks",
+	timestamps: false
+});
+
+Book.belongsToMany(User, {
+	through: "UserBooks",
+	timestamps: false
+});
 
 module.exports = User;

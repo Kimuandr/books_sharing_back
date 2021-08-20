@@ -3,7 +3,7 @@ const UserService = require("../services/user.services");
 class UserController {
 	async registration(req, res) {
 		try {
-			const newPerson = await UserService.createUser({ ...req.body });
+			const newPerson = await UserService.createUser(req.body);
 			res.json(newPerson);
 		} catch (err) {
 			res.status(500).send();

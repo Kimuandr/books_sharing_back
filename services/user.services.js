@@ -2,24 +2,22 @@ const User = require("../db/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
-const { ServerError, ErrorStatus } = require("../errors/serverErrors");
+const { ServerError, ERROR_STATUS } = require("../errors/serverErrors");
 
 class UserService {
 	async getAllUsers() {
-		const users = await User.findAll();
-		return users;
+		return User.findAll();
 	}
 
 	async hashedData(data) {
-		const dataHashed = await bcrypt.hash(data, 10);
-		return dataHashed;
+		return bcrypt.hash(data, 10);
 	}
 
 	async createUser({ name, email, password }) {
 		const userAlreadyExists = await User.findOne({ where: { email } });
 
 		if (userAlreadyExists) {
-			return new ServerError(ErrorStatus.FORBIDDEN, "Something went wrong! Try again!");
+			return new ServerError(ERROR_STATUS.FORBIDDEN, "Something went wrong! Try again!");
 		}
 		const newUser = await User.create({
 			name: name,
@@ -36,18 +34,18 @@ class UserService {
 	async userLogin(email, password) {
 		try {
 			if (!password || !email) {
-				return new ServerError(ErrorStatus.NOT_FOUND, "Try to enter your data again");
+				return new ServerError(ERROR_STATUS.NOT_FOUND, "Try to enter your data again");
 			}
 			const user = await User.findOne({ where: { email } });
 			if (!user) {
-				return new ServerError(ErrorStatus.NOT_FOUND, "Something went wrong");
+				return new ServerError(ERROR_STATUS.NOT_FOUND, "Something went wrong");
 			}
 			const comparePasswordResult = await bcrypt.compare(password, user.password);
 			if (comparePasswordResult) {
 				const token = await this.jwtAdding(user.id, user.email);
 				return { user, token };
 			}
-			return new ServerError(ErrorStatus.INTERNAL_SERVER, "Start from the beginning");
+			return new ServerError(ERROR_STATUS.INTERNAL_SERVER, "Start from the beginning");
 		} catch (err) {
 			console.log("Error", err);
 		}

@@ -5,21 +5,14 @@ const userRouter = require("./routes/user.routes");
 const bookRouter = require("./routes/book.routes");
 const User = require("./db/user");
 const Book = require("./db/book");
+const cors = require("cors");
 
 const PORT = 8080 || config.port;
 
 const app = express();
 
 app.use(express.json());
-
-User.belongsToMany(Book, {
-	through: "UserBooks",
-	timestamps: false
-});
-Book.belongsToMany(User, {
-	through: "UserBooks",
-	timestamps: false
-});
+app.use(cors());
 
 const tablesCreate = async (force = false) => {
 	try {

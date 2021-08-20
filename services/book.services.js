@@ -2,13 +2,11 @@ const Book = require("../db/book");
 
 class BookService {
 	async createOneBook(author, title) {
-		const newBook = await Book.create({ author, title });
-		return newBook;
+		return Book.create({ author, title });
 	}
 
-	async getAllBooks() {
-		const book = await Book.findAll();
-		return book;
+	getAllBooks() {
+		return Book.findAll();
 	}
 }
 
