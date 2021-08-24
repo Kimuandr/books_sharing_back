@@ -3,9 +3,11 @@ const config = require("./config/config");
 const sequelize = require("./db/db");
 const userRouter = require("./routes/user.routes");
 const bookRouter = require("./routes/book.routes");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const User = require("./db/user");
 const Book = require("./db/book");
-const cors = require("cors");
+const Token = require("./db/token");
 
 const PORT = 8080 || config.port;
 
@@ -13,8 +15,21 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 
-const tablesCreate = async (force = false) => {
+User.hasOne(Token, { foreignKey: "userId" });
+
+User.belongsToMany(Book, {
+	through: "UserBooks",
+	timestamps: false
+});
+
+Book.belongsToMany(User, {
+	through: "UserBooks",
+	timestamps: false
+});
+
+const tablesCreate = async (force = true) => {
 	try {
 		sequelize.sync({
 			force

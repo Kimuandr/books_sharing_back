@@ -1,6 +1,5 @@
 const db = require("./db");
 const { DataTypes } = require("sequelize");
-const Book = require("./book");
 
 const User = db.define(
 	"User", {
@@ -22,6 +21,18 @@ const User = db.define(
 			}
 		},
 		password: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			validate: {
+				notEmpty: true,
+				notNull: true
+			}
+		},
+		isActivated: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false
+		},
+		activationLink: {
 			type: DataTypes.STRING
 		}
 	}, {
@@ -29,15 +40,5 @@ const User = db.define(
 		timestamps: false
 	}
 );
-
-User.belongsToMany(Book, {
-	through: "UserBooks",
-	timestamps: false
-});
-
-Book.belongsToMany(User, {
-	through: "UserBooks",
-	timestamps: false
-});
 
 module.exports = User;
