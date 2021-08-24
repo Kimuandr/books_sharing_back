@@ -12,6 +12,7 @@
         "sourceType": "module"
     },
     "rules": {
+        "linebreak-style": 0,
         "semi": ["error", "always"],
         "quotes": ["error", "double"],
         "no-var": "error",
