@@ -74,7 +74,6 @@ class UserService {
 
 	async exit(refreshJwt) {
 		const delJwt = await Token.findOne({ where: { refreshJwt } });
-		// const delJwt = await Token.deleteOne({ refreshJwt });
 		await delJwt.destroy();
 		return { deletedRefreshToken: delJwt.refreshJwt };
 	}
